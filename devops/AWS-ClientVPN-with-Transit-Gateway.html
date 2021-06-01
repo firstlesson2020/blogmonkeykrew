@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<style>
+
+article {
+  line-height:1.2em;
+  background-size:2.4em 2.4em;
+  /* background-origin:content-box; */
+  /* some extra styles*/
+  padding:0 20px;
+  text-align:justify;
+  font-family:calibri,arial,sans-serif;
+  font-weight: 300;
+  font-size: 1.7rem;
+  border-left: 6px solid #00458b;
+  /* background-color:white; */
+
+  background-color: white;
+  /* margin: 0 0 40px 0; */
+  white-space: break-spaces;
+}
+
+.nameStyle {
+  font-family: italic;
+}
+
+.img-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* margin-right: .01rem; */
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+
+p {
+  display: inline-block;
+    white-space: normal;
+}
+
+ul {
+  display: inline-block;
+    white-space: normal;
+}
+</style>
+<body>
+<div class="container">
+  <article class="code-style"><h3>AWS ClientVPN with Transit Gateway</h3>
+  <img src="../images/ramana.jpeg" alt="..." class="img-thumbnail"><b class="nameStyle">By Ramana Kumar...</b>
+
+<h4><b>Problem(s)</b></h4>
+<p>Wouldn’t it be good if there is a stable, seamless and secure connection from office network to aws vpcs hosted on multiple accounts.
+What if users start working remotely from different networks ?
+How about traceability of user activity ?
+How reliable is office IPSec ?</p></article>
+<article><h4><b>Objective :</b></h4>
+<p>To enable remote work with seamless and secure connection from multiple networks to multiple vpcs hosted on multiple aws accounts.</p></article>
+<article><h4><b>Option(s) :</b></h4>
+<p>AWS Site-to-Site VPN (Site-to-Site VPN) connection
+AWS Client VPN</p></article>
+<article><h4><b>AWS Site-to-Site VPN :</b></h4>
+<p>You can securely extend your data center or branch office network to the cloud with an AWS Site-to-Site VPN (Site-to-Site VPN)
+connection. It uses internet protocol security (IPSec) communications to create encrypted VPN tunnels between two locations.</p>
+<div class="container">
+<img src="../images/vpn1.jpeg" class="img-fluid" alt="Responsive image">
+</div></article>
+<article><h4><b>Challenges with Site-Site:</b></h4>
+<p><b>Below are some cons that were observed if site-site is used :</b></p>
+<ul>
+<li>Connection must be set from office network to AWS VPC.</li>
+<li>Every User/Network need to connect to office network before they establish a connection to VPC.</li>
+<li>Reliability issues with office networks.</li>
+<li>Dependency on power supply</li>
+<li>Dependency on office ISP</li>
+<li>Less traceability of user activity</li>
+</ul></article>
+<article><h4><b>AWS Client VPN :</b></h4>
+<p>AWS Client VPN is a managed client-based VPN service that enables you to securely access your AWS resources and resources in your onpremises network.
+With Client VPN, you can access your resources from any location using an OpenVPN-based VPN client.</p>
+<div class="container">
+<img src="../images/vpn2.jpeg" class="img-fluid" alt="Responsive image">
+</div></article>
+<article><h4><b>Pros of Client VPN :</b></h4>
+<ul>
+<li>Secure connections</li>
+<li>Managed service</li>
+<li>High availability and elasticity</li>
+<li>Authentication</li>
+<li>Granular control</li>
+<li>Ease of use</li>
+<li>Manageability</li>
+</ul></article>
+<article><h4><b>Solution</b></h4>
+<p>Since there is a breaking difference from AWS Client VPN to Site-to-Site VPN in terms of reliability, the solution picked is AWS Client VPN with
+Transit Gateway.</p>
+<p>Implementation :</p>
+<ul>
+<li>Configure AWS client VPN in a landing aws account.</li>
+<li>Configure AWS Transit gateway between VPCs that are supposed to communicate privately.</li>
+<li>Configure AWS client VPN with AD connector.</li>
+<li>Authorize AD groups to CIDRs that need to be accessed.</li>
+<li>Configure client vpn routes on destination CIDRs that are supposed to be accessible by client vpn.</li>
+<li>Configure AWS client VPN in a landing aws account.</li>
+</ul>
+<div class="container">
+<img src="../images/vpn3.jpeg" class="img-fluid" alt="Responsive image">
+</div></article>
+<article><h4><b>End of Story :</b></h4>
+<p>AWS Client VPN can authorize users via AD connector and provides connectivity to subnet associated with client VPN.
+Since the subnet has communication with transit gateway, authorised users can connect to all the VPCs which are integrated to transit gateway.</p>
+<p>Points to be Noted :</p>
+<ul>
+<li>AWS transit gateway supports connectivity to VPCs within same region.</li>
+<li>Transit gateway supports inter account connections</li>
+<li>Make sure all the route tables are properly configured to allow/exchange traffic from TGWID (transit gateway id).</p></li>
+</ul>
+<h4><b>References:</b></h4>
+<ul>
+<li><a href="https://docs.aws.amazon.com/vpn/latest/clientvpn-admin/cvpn-getting-started.html" >Clientvpn-Admin</a></li>
+<li><a href="https://docs.aws.amazon.com/vpc/latest/tgw/tgw-getting-started.html">TGW</a></li>
+<li><a href="https://docs.aws.amazon.com/directoryservice/latest/admin-guide/directory_ad_connector.html">Admin-Guide</a></li>
+<li><a href="https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html">VPC_VPN</a></li>
+</ul>
+
+                 <b class="text-center">Thanks...</b>
+</article>
+</div>
+</body>
+</html>
